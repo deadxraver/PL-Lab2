@@ -11,6 +11,7 @@ dict.o:	dict.asm lib.asm colon.inc
 	nasm -felf64 -o dict.o dict.asm
 
 test:
+	make
 	python3 test.py
 
 .PHONY: clean
