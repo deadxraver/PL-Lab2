@@ -2,8 +2,17 @@
 %include "dict.inc"
 %include "words.inc"
 
+%define BUF_SZ  256
+%define ERROR_C 1
+%define OK_C    0
+
+%macro call_nl 1
+  call %1
+  call print_newline
+%endmacro
+
 section .data
-buffer:         times 256 db 0  ; 255 + null-terminator
+;buffer:         times BUF_SZ db 0  ; 255 + null-terminator
 word_not_found: db "there is no such word", 0
 overflow:       db "string cannot be greater than 255 bytes", 0
 
@@ -12,8 +21,9 @@ section .text
 global _start
 
 _start:
-mov   rdi, buffer
-mov   rsi, 256
+sub   rsp, BUF_SZ
+mov   rdi, rsp
+mov   rsi, BUF_SZ
 call  read_word
 test  rax, rax
 jz    of_err
@@ -30,23 +40,20 @@ call  string_length
 pop   rdi
 add   rdi, rax
 inc   rdi
-call  print_string
-call  print_newline
-xor   rdi, rdi
+call_nl  print_string
+mov   rdi, OK_C
 call  exit
 
 of_err:
   mov   rdi, overflow
-  call  print_err
-  call  print_newline
-  mov   rdi, 1
+  call_nl  print_err
+  mov   rdi, ERROR_C
   call  exit
 
 not_found:
   mov   rdi, word_not_found
-  call  print_err
-  call  print_newline
-  mov   rdi, 1
+  call_nl  print_err
+  mov   rdi, ERROR_C
   call  exit
 
 
