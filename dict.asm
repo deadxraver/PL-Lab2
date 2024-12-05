@@ -4,6 +4,16 @@
 section .text
 
 global  find_word
+global  get_value
+
+get_value:
+  push rdi
+  call string_length
+  pop rdi
+  lea rax, [rdi + rax + 1]
+  ret
+
+
 
 find_word: ; rdi - string, rsi - dictionary element
   .loop:
@@ -20,7 +30,7 @@ find_word: ; rdi - string, rsi - dictionary element
     mov   rsi, [rsi]      ; jump to next element
     jmp   .loop
 
-.end_found:
+  .end_found:
     mov   rax, rsi        ; put element addr in rax
     ret
   .end_not_found:

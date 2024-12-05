@@ -35,12 +35,10 @@ test  rax, rax
 jz    not_found
 mov   rdi, rax
 add   rdi, 8
-push  rdi
-call  string_length
-pop   rdi
-add   rdi, rax
-inc   rdi
+call  get_value
+mov   rdi, rax
 call_nl  print_string
+add   rsp, BUF_SZ
 mov   rdi, OK_C
 call  exit
 
